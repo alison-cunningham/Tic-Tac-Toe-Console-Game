@@ -103,23 +103,15 @@ namespace TicTacToe
             do
             {
 
-                if (byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
-                {
-                    isValid = true;
-                }
-                else
-                {
+                if (!byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
                     Console.WriteLine($"\nError: please input a number form 1 - 9");
-                }         
 
                 foreach (char space in gameBoard)
                 {
                     if (space == userPosition)
-                    {
                         isValid = true;
-                        break;
-                    }
-
+                    else
+                        Console.WriteLine($"\nThat space is unavailable. Please try again.");
                 }
 
             } while (isValid == false);

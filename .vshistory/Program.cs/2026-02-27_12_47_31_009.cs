@@ -22,7 +22,7 @@ namespace TicTacToe
                 //output: playagain? (y/n)
 
 
-            } while (playAgain == true);
+            } while (playAgain = true);
 
             //thanks for playing message
         }
@@ -47,14 +47,14 @@ namespace TicTacToe
         static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer)
         {
             Console.WriteLine("-------------");
-            Console.WriteLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+            Console.WriteLine($"|{dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
             Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+            Console.WriteLine($"|{dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
             Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+            Console.WriteLine($"|{dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             Console.WriteLine("-------------");
 
-            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
+            Console.WriteLine($"{dCurrentPlayer}, enter a position (1-9):");
         }
 
         static void GameLoop(char currentPlayer, char[,] gameBoard, int xWins, int yWins, int ties, int rounds)
@@ -65,14 +65,14 @@ namespace TicTacToe
             do
             {
                 input = GetInput(gameBoard);
-                UpdateArray(input, gameBoard, currentPlayer);
+                UpdateArray(input);
                 DrawScreen(gameBoard, currentPlayer);
 
                 if (rounds > 4)
                 {
-                    winner = CheckWin(gameBoard, currentPlayer);
+                    winner = CheckWin();
 
-                    if (winner == true)
+                    if (winner = true)
                     {
                         if (currentPlayer == 'X')
                         {
@@ -91,7 +91,7 @@ namespace TicTacToe
 
                 currentPlayer = SwitchPlayer(currentPlayer);
 
-            } while (winner == false);
+            } while (winner = false);
 
         }
 
@@ -102,52 +102,30 @@ namespace TicTacToe
 
             do
             {
+                if (!byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
+                    Console.WriteLine("Error: please input a number form 1 - 9");
 
-                if (byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
-                {
-                    isValid = true;
-                }
-                else
-                {
-                    Console.WriteLine($"\nError: please input a number form 1 - 9");
-                }         
-
-                foreach (char space in gameBoard)
-                {
-                    if (space == userPosition)
+               for (int i = 0; i < gameBoard.GetLength(0);i++)
+               {
+                    if(gameBoard[i] == userPosition)
                     {
-                        isValid = true;
-                        break;
+
                     }
+               }
 
-                }
-
-            } while (isValid == false);
+            } while (isValid = false);
 
 
 
             return userPosition;
         }
 
-        static void UpdateArray(byte dInput, char[,] dGameBoard, char dCurrentPlayer)
+        static void UpdateArray(byte dInput)
         {
-            byte colCount = 3, rowCount = 3;
 
-            for (int c = 0; c < colCount; c++)
-            {
-                for (int r = 0; r < rowCount; r++)
-                {
-                    if (dGameBoard[r, c] == dInput)
-                    {
-                        dGameBoard[r, c] = dCurrentPlayer;
-                    }
-
-                }
-
-            }
         }
 
-        public static char SwitchPlayer(char dCurrentPlayer)
+        static char SwitchPlayer(char dCurrentPlayer)
         {
             if (dCurrentPlayer == 'X')
                 dCurrentPlayer = 'O';
@@ -158,7 +136,7 @@ namespace TicTacToe
             return dCurrentPlayer;
         }
 
-        public static bool CheckWin(char[,] dGameBoard, char dCurrentPlayer)
+        static bool CheckWin()
         {
 
             return false;

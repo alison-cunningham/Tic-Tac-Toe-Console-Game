@@ -47,14 +47,14 @@ namespace TicTacToe
         static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer)
         {
             Console.WriteLine("-------------");
-            Console.WriteLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+            Console.WriteLine($"|{dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
             Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+            Console.WriteLine($"|{dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
             Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+            Console.WriteLine($"|{dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             Console.WriteLine("-------------");
 
-            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
+            Console.WriteLine($"{dCurrentPlayer}, enter a position (1-9):");
         }
 
         static void GameLoop(char currentPlayer, char[,] gameBoard, int xWins, int yWins, int ties, int rounds)
@@ -103,23 +103,15 @@ namespace TicTacToe
             do
             {
 
-                if (byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
-                {
-                    isValid = true;
-                }
-                else
-                {
-                    Console.WriteLine($"\nError: please input a number form 1 - 9");
-                }         
+                if (!byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
+                    Console.WriteLine($"\tError: please input a number form 1 - 9");
 
                 foreach (char space in gameBoard)
                 {
-                    if (space == userPosition)
-                    {
+                    if (space != userPosition)
+                        Console.WriteLine($"\tThat space is unavailable. Please try again.");
+                    else
                         isValid = true;
-                        break;
-                    }
-
                 }
 
             } while (isValid == false);

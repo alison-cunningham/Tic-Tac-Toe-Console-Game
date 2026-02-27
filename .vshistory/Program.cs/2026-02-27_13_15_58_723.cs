@@ -54,7 +54,7 @@ namespace TicTacToe
             Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             Console.WriteLine("-------------");
 
-            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
+            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9):");
         }
 
         static void GameLoop(char currentPlayer, char[,] gameBoard, int xWins, int yWins, int ties, int rounds)
@@ -103,23 +103,15 @@ namespace TicTacToe
             do
             {
 
-                if (byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
-                {
-                    isValid = true;
-                }
-                else
-                {
+                if (!byte.TryParse(Console.ReadLine(), out userPosition) || userPosition > 9)
                     Console.WriteLine($"\nError: please input a number form 1 - 9");
-                }         
 
                 foreach (char space in gameBoard)
                 {
-                    if (space == userPosition)
-                    {
+                    if (space != userPosition)
+                        Console.WriteLine($"\nThat space is unavailable. Please try again.");
+                    else
                         isValid = true;
-                        break;
-                    }
-
                 }
 
             } while (isValid == false);
