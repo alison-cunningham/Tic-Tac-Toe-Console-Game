@@ -8,23 +8,18 @@ namespace TicTacToe
             char[,] gameBoard = new char[3, 3];
 
             char currentPlayer = 'X';
-            char outcome;
 
-            int rounds = 1, xWins = 0, yWins = 0, ties = 0;
+            int rounds = 0, xWins = 0, yWins = 0, ties = 0;
 
-            bool playAgain = false;
+            bool playAgain = true;
 
             do
             {
                 PopulateArray(gameBoard);
-                outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds);
-
-                if (outcome == 'T')
-                    Console.WriteLine($"\nTie! Nobody wins.");
-                else
-                    Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
-
-                Console.Write($"\nDo you want to play again? (y/n) ");
+                DrawScreen(gameBoard, currentPlayer);
+                GameLoop(currentPlayer, gameBoard, xWins, yWins, ties, rounds);
+                //results of game
+                Console.WriteLine($"Do you want to play again? (y/n)\t");
 
                 if(Console.ReadLine() == "y")
                     playAgain = true;
@@ -40,7 +35,7 @@ namespace TicTacToe
             byte colCount = 3, rowCount = 3;
 
             char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int index = 0;
+            byte index = 0;
 
             for (int r = 0; r < rowCount; r++)
             {
@@ -52,16 +47,9 @@ namespace TicTacToe
             }
         }
 
-        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner)
+        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer)
         {
             Console.Clear();
-
-            Console.WriteLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
-
-            Console.WriteLine($"Round #:\t{rounds}");
-            Console.WriteLine($"X wins:\t\t{xWins}");
-            Console.WriteLine($"Y wins:\t\t{yWins}");
-            Console.WriteLine($"Ties:\t\t{ties}\n");
 
             Console.WriteLine("-------------");
             Console.WriteLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
@@ -71,53 +59,47 @@ namespace TicTacToe
             Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             Console.WriteLine("-------------");
 
-            if(!dWinner)
             Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
         }
 
-        static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds)
+        static void GameLoop(char currentPlayer, char[,] gameBoard, int xWins, int yWins, int ties, int rounds)
         {
             bool winner = false;
             char input;
-            char itsATie = 'T';
-            int turns = 1;
 
             do
             {
-                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
-
                 input = GetInput(gameBoard);
                 UpdateArray(input, gameBoard, currentPlayer);
+                DrawScreen(gameBoard, currentPlayer);
 
-
-                if (turns > 4)
+                if (rounds > 4)
                 {
                     winner = CheckWin(gameBoard, currentPlayer);
 
                     if (winner == true)
                     {
                         if (currentPlayer == 'X')
+                        {
                             xWins++;
+                        }
                         else
+                        {
                             yWins++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
-                        return currentPlayer;
+                        }
                     }
-                    else if (turns == 9)
+                    else if (rounds == 9)
                     {
                         ties++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
-                        return itsATie;
                     }
                 }
 
-                turns++;
                 currentPlayer = SwitchPlayer(currentPlayer);
+
+                rounds++;
 
             } while (winner == false);
 
-            rounds++;
-            return currentPlayer;
         }
 
         static char GetInput(char[,] gameBoard)

@@ -17,12 +17,7 @@ namespace TicTacToe
             do
             {
                 PopulateArray(gameBoard);
-                outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds);
-
-                if (outcome == 'T')
-                    Console.WriteLine($"\nTie! Nobody wins.");
-                else
-                    Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
+                GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds);
 
                 Console.Write($"\nDo you want to play again? (y/n) ");
 
@@ -40,7 +35,7 @@ namespace TicTacToe
             byte colCount = 3, rowCount = 3;
 
             char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int index = 0;
+            byte index = 0;
 
             for (int r = 0; r < rowCount; r++)
             {
@@ -73,6 +68,11 @@ namespace TicTacToe
 
             if(!dWinner)
             Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
+
+            if (outcome == 'T')
+                Console.WriteLine($"\nTie! Nobody wins.");
+            else
+                Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
         }
 
         static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds)
@@ -80,7 +80,7 @@ namespace TicTacToe
             bool winner = false;
             char input;
             char itsATie = 'T';
-            int turns = 1;
+            byte turns = 1;
 
             do
             {

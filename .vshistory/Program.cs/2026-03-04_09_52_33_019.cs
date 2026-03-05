@@ -40,7 +40,7 @@ namespace TicTacToe
             byte colCount = 3, rowCount = 3;
 
             char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int index = 0;
+            byte index = 0;
 
             for (int r = 0; r < rowCount; r++)
             {
@@ -80,7 +80,7 @@ namespace TicTacToe
             bool winner = false;
             char input;
             char itsATie = 'T';
-            int turns = 1;
+            byte turns = 1;
 
             do
             {

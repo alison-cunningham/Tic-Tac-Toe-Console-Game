@@ -17,6 +17,7 @@ namespace TicTacToe
             do
             {
                 PopulateArray(gameBoard);
+                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds);
                 outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds);
 
                 if (outcome == 'T')
@@ -24,7 +25,7 @@ namespace TicTacToe
                 else
                     Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
 
-                Console.Write($"\nDo you want to play again? (y/n) ");
+                Console.Write($"\nDo you want to play again? (y/n)\t");
 
                 if(Console.ReadLine() == "y")
                     playAgain = true;
@@ -40,7 +41,7 @@ namespace TicTacToe
             byte colCount = 3, rowCount = 3;
 
             char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int index = 0;
+            byte index = 0;
 
             for (int r = 0; r < rowCount; r++)
             {
@@ -52,7 +53,7 @@ namespace TicTacToe
             }
         }
 
-        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner)
+        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds)
         {
             Console.Clear();
 
@@ -71,7 +72,6 @@ namespace TicTacToe
             Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             Console.WriteLine("-------------");
 
-            if(!dWinner)
             Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
         }
 
@@ -79,12 +79,11 @@ namespace TicTacToe
         {
             bool winner = false;
             char input;
-            char itsATie = 'T';
-            int turns = 1;
+            byte turns = 1;
 
             do
             {
-                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
+                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds);
 
                 input = GetInput(gameBoard);
                 UpdateArray(input, gameBoard, currentPlayer);
@@ -100,14 +99,12 @@ namespace TicTacToe
                             xWins++;
                         else
                             yWins++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
                         return currentPlayer;
                     }
                     else if (turns == 9)
                     {
                         ties++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
-                        return itsATie;
+                        return 'T';
                     }
                 }
 
