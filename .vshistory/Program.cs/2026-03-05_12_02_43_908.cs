@@ -1,7 +1,5 @@
 ﻿
 using System.Text;
-using System.IO;
-using System.Diagnostics;
 
 namespace TicTacToe
 {
@@ -9,8 +7,6 @@ namespace TicTacToe
     {
         static void Main()
         {
-            string filePath = "output.txt";
-
             char[,] gameBoard = new char[3, 3];
 
             char currentPlayer = 'X';
@@ -20,20 +16,15 @@ namespace TicTacToe
 
             bool playAgain = false;
 
-            StringBuilder sb = new StringBuilder();
-
             do
             {
                 PopulateArray(gameBoard);
-                outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds, sb);
+                outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds);
 
                 if (outcome == 'T')
-                    sb.AppendLine($"\nTie! Nobody wins.");
+                    Console.WriteLine($"\nTie! Nobody wins.");
                 else
-                    sb.AppendLine($"\nCongratulations! Player {outcome} wins!");
-
-                WriteToFile(sb, filePath);
-                PrintToScreen(sb);
+                    Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
 
                 Console.Write($"\nDo you want to play again? (y/n) ");
 
@@ -44,8 +35,6 @@ namespace TicTacToe
 
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
-            Console.ReadKey();
-            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)
@@ -65,46 +54,32 @@ namespace TicTacToe
             }
         }
 
-        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner, StringBuilder sb)
-        {
-            sb.Clear();
-
-            sb.AppendLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
-
-            sb.AppendLine($"Round #:\t{rounds}");
-            sb.AppendLine($"X wins:\t\t{xWins}");
-            sb.AppendLine($"Y wins:\t\t{yWins}");
-            sb.AppendLine($"Ties:\t\t{ties}\n");
-
-            sb.AppendLine("-------------");
-            sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
-            sb.AppendLine("|---|---|---|");
-            sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
-            sb.AppendLine("|---|---|---|");
-            sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
-            sb.AppendLine("-------------");
-
-            if(!dWinner)
-            sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
-        }
-
-        static void PrintToScreen(StringBuilder sb)
+        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner)
         {
             Console.Clear();
 
-            Console.WriteLine(sb.ToString());
+            StringBuilder sb = new StringBuilder();
+
+            Console.WriteLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
+
+            Console.WriteLine($"Round #:\t{rounds}");
+            Console.WriteLine($"X wins:\t\t{xWins}");
+            Console.WriteLine($"Y wins:\t\t{yWins}");
+            Console.WriteLine($"Ties:\t\t{ties}\n");
+
+            Console.WriteLine("-------------");
+            Console.WriteLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+            Console.WriteLine("|---|---|---|");
+            Console.WriteLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+            Console.WriteLine("|---|---|---|");
+            Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+            Console.WriteLine("-------------");
+
+            if(!dWinner)
+            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
         }
 
-        static void WriteToFile(StringBuilder sb, string filePath)
-        {
-            StreamWriter writer = new StreamWriter(filePath, false);
-
-            writer.Write(sb.ToString());
-
-            writer.Close();
-        }
-
-        static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds, StringBuilder sb)
+        static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds)
         {
             bool winner = false;
             char input;
@@ -113,8 +88,7 @@ namespace TicTacToe
 
             do
             {
-                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
-                PrintToScreen(sb);
+                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
 
                 input = GetInput(gameBoard);
                 UpdateArray(input, gameBoard, currentPlayer);
@@ -130,13 +104,13 @@ namespace TicTacToe
                             xWins++;
                         else
                             yWins++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
+                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
                         return currentPlayer;
                     }
                     else if (turns == 9)
                     {
                         ties++;
-                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
+                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner);
                         return itsATie;
                     }
                 }

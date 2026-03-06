@@ -45,7 +45,6 @@ namespace TicTacToe
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
             Console.ReadKey();
-            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)

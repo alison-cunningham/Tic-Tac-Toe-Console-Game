@@ -9,8 +9,6 @@ namespace TicTacToe
     {
         static void Main()
         {
-            string filePath = "output.txt";
-
             char[,] gameBoard = new char[3, 3];
 
             char currentPlayer = 'X';
@@ -28,12 +26,9 @@ namespace TicTacToe
                 outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds, sb);
 
                 if (outcome == 'T')
-                    sb.AppendLine($"\nTie! Nobody wins.");
+                    Console.WriteLine($"\nTie! Nobody wins.");
                 else
-                    sb.AppendLine($"\nCongratulations! Player {outcome} wins!");
-
-                WriteToFile(sb, filePath);
-                PrintToScreen(sb);
+                    Console.WriteLine($"\nCongratulations! Player {outcome} wins!");
 
                 Console.Write($"\nDo you want to play again? (y/n) ");
 
@@ -44,8 +39,6 @@ namespace TicTacToe
 
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
-            Console.ReadKey();
-            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)
@@ -67,9 +60,7 @@ namespace TicTacToe
 
         static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner, StringBuilder sb)
         {
-            sb.Clear();
-
-            sb.AppendLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
+            sb.Append($"Tic-Tac-Toe - Created by Alison Cunningham\n");
 
             sb.AppendLine($"Round #:\t{rounds}");
             sb.AppendLine($"X wins:\t\t{xWins}");
@@ -85,23 +76,12 @@ namespace TicTacToe
             sb.AppendLine("-------------");
 
             if(!dWinner)
-            sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
+            sb.AppendLine($"Player {dCurrentPlayer}, enter a position (1-9): ");
         }
 
         static void PrintToScreen(StringBuilder sb)
         {
-            Console.Clear();
-
             Console.WriteLine(sb.ToString());
-        }
-
-        static void WriteToFile(StringBuilder sb, string filePath)
-        {
-            StreamWriter writer = new StreamWriter(filePath, false);
-
-            writer.Write(sb.ToString());
-
-            writer.Close();
         }
 
         static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds, StringBuilder sb)
@@ -114,7 +94,6 @@ namespace TicTacToe
             do
             {
                 DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
-                PrintToScreen(sb);
 
                 input = GetInput(gameBoard);
                 UpdateArray(input, gameBoard, currentPlayer);

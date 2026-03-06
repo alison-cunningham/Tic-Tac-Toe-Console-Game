@@ -45,7 +45,6 @@ namespace TicTacToe
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
             Console.ReadKey();
-            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)
@@ -100,8 +99,6 @@ namespace TicTacToe
             StreamWriter writer = new StreamWriter(filePath, false);
 
             writer.Write(sb.ToString());
-
-            writer.Close();
         }
 
         static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds, StringBuilder sb)

@@ -32,7 +32,6 @@ namespace TicTacToe
                 else
                     sb.AppendLine($"\nCongratulations! Player {outcome} wins!");
 
-                WriteToFile(sb, filePath);
                 PrintToScreen(sb);
 
                 Console.Write($"\nDo you want to play again? (y/n) ");
@@ -45,7 +44,6 @@ namespace TicTacToe
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
             Console.ReadKey();
-            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)
@@ -93,15 +91,6 @@ namespace TicTacToe
             Console.Clear();
 
             Console.WriteLine(sb.ToString());
-        }
-
-        static void WriteToFile(StringBuilder sb, string filePath)
-        {
-            StreamWriter writer = new StreamWriter(filePath, false);
-
-            writer.Write(sb.ToString());
-
-            writer.Close();
         }
 
         static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds, StringBuilder sb)
