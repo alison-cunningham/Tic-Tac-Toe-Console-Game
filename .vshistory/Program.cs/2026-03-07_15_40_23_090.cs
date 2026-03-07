@@ -1,30 +1,51 @@
 ﻿
+using System.Text;
+using System.IO;
+using System.Diagnostics;
+
 namespace TicTacToe
 {
     public class TicTacToe
     {
         static void Main()
         {
+            string filePath = "output.txt";
+
             char[,] gameBoard = new char[3, 3];
 
             char currentPlayer = 'X';
+            char outcome;
 
-            int rounds = 0, xWins = 0, yWins = 0, ties = 0;
+            int rounds = 1, xWins = 0, yWins = 0, ties = 0;
 
-            bool playAgain = true;
+            bool playAgain = false;
+
+            StringBuilder sb = new StringBuilder();
 
             do
             {
                 PopulateArray(gameBoard);
-                DrawScreen(gameBoard, currentPlayer);
-                GameLoop(currentPlayer, gameBoard, xWins, yWins, ties, rounds);
-                //results of game
-                //output: playagain? (y/n)
+                outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds, sb);
 
+                if (outcome == 'T')
+                    sb.AppendLine($"\nTie! Nobody wins.");
+                else
+                    sb.AppendLine($"\nCongratulations! Player {outcome} wins!");
+
+                WriteToFile(sb, filePath);
+                PrintToScreen(sb);
+
+                Console.Write($"\nDo you want to play again? (y/n) ");
+
+                if(Console.ReadLine() == "y")
+                    playAgain = true;
 
             } while (playAgain == true);
 
-            //thanks for playing message
+            Console.Clear();
+            Console.WriteLine("Thanks for playing!");
+            Console.ReadKey();
+            Process.Start("notepad.exe", filePath);
         }
 
         static void PopulateArray(char[,] dGameBoard)
@@ -32,7 +53,7 @@ namespace TicTacToe
             byte colCount = 3, rowCount = 3;
 
             char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            byte index = 0;
+            int index = 0;
 
             for (int r = 0; r < rowCount; r++)
             {
@@ -44,59 +65,98 @@ namespace TicTacToe
             }
         }
 
-        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer)
+        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, int xWins, int yWins, int ties, int rounds, bool dWinner, StringBuilder sb)
+        {
+            sb.Clear();
+
+            sb.AppendLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
+
+            sb.AppendLine($"Round #:\t{rounds}");
+            sb.AppendLine($"X wins:\t\t{xWins}");
+            sb.AppendLine($"Y wins:\t\t{yWins}");
+            sb.AppendLine($"Ties:\t\t{ties}\n");
+
+            sb.AppendLine("-------------");
+            sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+            sb.AppendLine("-------------");
+
+            if(!dWinner)
+            sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
+        }
+
+        static void PrintToScreen(StringBuilder sb)
         {
             Console.Clear();
 
-            Console.WriteLine("-------------");
-            Console.WriteLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
-            Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
-            Console.WriteLine("|---|---|---|");
-            Console.WriteLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
-            Console.WriteLine("-------------");
-
-            Console.Write($"\nPlayer {dCurrentPlayer}, enter a position (1-9): ");
+            Console.WriteLine(sb.ToString());
         }
 
-        static void GameLoop(char currentPlayer, char[,] gameBoard, int xWins, int yWins, int ties, int rounds)
+        static void WriteToFile(StringBuilder sb, string filePath)
+        {
+            StreamWriter writer = new StreamWriter(filePath, false);
+
+            try
+            {
+                writer.Write(sb.ToString());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error writing file: {ex.Message}");
+            }
+            finally
+            {
+                writer.Close();
+            }
+        }
+
+        static char GameLoop(char currentPlayer, char[,] gameBoard, ref int xWins, ref int yWins, ref int ties, ref int rounds, StringBuilder sb)
         {
             bool winner = false;
             char input;
+            char itsATie = 'T';
+            int turns = 1;
 
             do
             {
+                DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
+                PrintToScreen(sb);
+
                 input = GetInput(gameBoard);
                 UpdateArray(input, gameBoard, currentPlayer);
-                DrawScreen(gameBoard, currentPlayer);
 
-                if (rounds > 4)
+
+                if (turns > 4)
                 {
                     winner = CheckWin(gameBoard, currentPlayer);
 
                     if (winner == true)
                     {
                         if (currentPlayer == 'X')
-                        {
                             xWins++;
-                        }
                         else
-                        {
                             yWins++;
-                        }
+                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
+                        return currentPlayer;
                     }
-                    else if (rounds == 9)
+                    else if (turns == 9)
                     {
                         ties++;
+                        DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
+                        return itsATie;
                     }
                 }
 
+                turns++;
                 currentPlayer = SwitchPlayer(currentPlayer);
-
-                rounds++;
 
             } while (winner == false);
 
+            rounds++;
+            return currentPlayer;
         }
 
         static char GetInput(char[,] gameBoard)
@@ -159,23 +219,6 @@ namespace TicTacToe
 
         public static bool CheckWin(char[,] dGameBoard, char dCurrentPlayer)
         {
-            /*
-//check for vertical win
-FOR column FROM 0 to LESS THAN colCount
-	winner = TRUE
-		FOR row FROM 0 to LESS THAN rowCount
-			IF gameBoard[row,column] != currentPlayer
-				winner = FALSE
-				BREAK
-			END IF			
-		END FOR
-		IF winner = TRUE
-			RETURN winner
-		END IF
-
-	END FOR
-             */
-
             int colCount = 3, rowCount = 3;
             bool winner = false;
 
@@ -193,7 +236,7 @@ FOR column FROM 0 to LESS THAN colCount
                         break;
                     }
                 }
-                if (winner = true)
+                if (winner == true)
                     return winner;
             }
 
@@ -210,6 +253,34 @@ FOR column FROM 0 to LESS THAN colCount
                         winner = false;
                         break;
                     }
+                }
+                if (winner == true)
+                    return winner;
+            }
+
+            //Check for diagonal win
+
+            winner = true;
+
+            for(int i = 0; i < colCount; i++)
+            {
+                if (dGameBoard[i,i] != dCurrentPlayer)
+                {
+                    winner = false;
+                    break;
+                }
+            }
+            if (winner == true)
+                return winner;
+
+            winner = true;
+
+            for(int i = 0; i < rowCount; i++)
+            {
+                if (dGameBoard[i,colCount-1-i] != dCurrentPlayer)
+                {
+                    winner = false;
+                    break;
                 }
             }
 
