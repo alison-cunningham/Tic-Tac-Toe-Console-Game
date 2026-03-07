@@ -102,14 +102,12 @@ namespace TicTacToe
             try
             {
                 writer.Write(sb.ToString());
+
+                writer.Close();
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error writing file: {ex.Message}");
-            }
-            finally
-            {
-                writer.Close();
+                Console.WriteLine($"Error:")
             }
         }
 
