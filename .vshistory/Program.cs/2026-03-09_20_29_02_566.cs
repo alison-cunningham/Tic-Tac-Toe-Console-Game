@@ -44,7 +44,7 @@ namespace TicTacToe
                     else
                         playAgain = false;
 
-                } while (playAgain == true);
+                } while (playAgain == true) ;
             }
             catch (Exception e)
             {
@@ -100,7 +100,7 @@ namespace TicTacToe
 
                 sb.AppendLine($"Round #:\t{rounds}");
                 sb.AppendLine($"X wins:\t\t{xWins}");
-                sb.AppendLine($"O wins:\t\t{oWins}");
+                sb.AppendLine($"Y wins:\t\t{oWins}");
                 sb.AppendLine($"Ties:\t\t{ties}\n");
 
                 sb.AppendLine("-------------");
@@ -153,7 +153,7 @@ namespace TicTacToe
             }
             finally
             {
-                if (writer is not null)
+                if(writer is not null)
                     writer.Close();
             }
         }
@@ -257,9 +257,9 @@ namespace TicTacToe
 
             try
             {
-                for (int r = 0; r < rowCount; r++)
+                for (int c = 0; c < colCount; c++)
                 {
-                    for (int c = 0; c < colCount; c++)
+                    for (int r = 0; r < rowCount; r++)
                     {
                         if (dGameBoard[r, c] == dInput)
                         {

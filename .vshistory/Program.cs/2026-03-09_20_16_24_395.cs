@@ -16,7 +16,7 @@ namespace TicTacToe
             char currentPlayer = 'X';
             char outcome;
 
-            ushort rounds = 1, xWins = 0, oWins = 0, ties = 0;
+            ushort rounds = 1, xWins = 0, yWins = 0, ties = 0;
 
             bool playAgain = false;
 
@@ -26,7 +26,7 @@ namespace TicTacToe
                 do
                 {
                     PopulateArray(gameBoard);
-                    outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref oWins, ref ties, ref rounds, sb);
+                    outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref yWins, ref ties, ref rounds, sb);
 
                     if (outcome == 'T')
                         sb.AppendLine($"\nTie! Nobody wins.");
@@ -39,12 +39,10 @@ namespace TicTacToe
                     Console.Write($"\nDo you want to play again? (y/n) ");
                     playerInput = Console.ReadLine();
 
-                    if (playerInput.ToLower() == "y")
-                        playAgain = true;
-                    else
+                    if (playerInput.ToLower() == "n")
                         playAgain = false;
 
-                } while (playAgain == true);
+                } while (playAgain == true) ;
             }
             catch (Exception e)
             {
@@ -90,35 +88,27 @@ namespace TicTacToe
          * 
          */
 
-        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, ushort xWins, ushort oWins, ushort ties, ushort rounds, bool dWinner, StringBuilder sb)
+        static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, ushort xWins, ushort yWins, ushort ties, ushort rounds, bool dWinner, StringBuilder sb)
         {
-            try
-            {
-                sb.Clear();
+            sb.Clear();
 
-                sb.AppendLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
+            sb.AppendLine($"Tic-Tac-Toe - Created by Alison Cunningham\n");
 
-                sb.AppendLine($"Round #:\t{rounds}");
-                sb.AppendLine($"X wins:\t\t{xWins}");
-                sb.AppendLine($"O wins:\t\t{oWins}");
-                sb.AppendLine($"Ties:\t\t{ties}\n");
+            sb.AppendLine($"Round #:\t{rounds}");
+            sb.AppendLine($"X wins:\t\t{xWins}");
+            sb.AppendLine($"Y wins:\t\t{yWins}");
+            sb.AppendLine($"Ties:\t\t{ties}\n");
 
-                sb.AppendLine("-------------");
-                sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
-                sb.AppendLine("|---|---|---|");
-                sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
-                sb.AppendLine("|---|---|---|");
-                sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
-                sb.AppendLine("-------------");
+            sb.AppendLine("-------------");
+            sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+            sb.AppendLine("-------------");
 
-                if (!dWinner)
-                    sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"An error occurred: {e.Message}");
-            }
-
+            if (!dWinner)
+                sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
         }
 
         /*
@@ -126,16 +116,9 @@ namespace TicTacToe
          */
         static void PrintToScreen(StringBuilder sb)
         {
-            try
-            {
-                Console.Clear();
+            Console.Clear();
 
-                Console.WriteLine(sb.ToString());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"An error occurred: {e.Message}");
-            }
+            Console.WriteLine(sb.ToString());
         }
 
         static void WriteToFile(StringBuilder sb, string filePath)
@@ -153,7 +136,7 @@ namespace TicTacToe
             }
             finally
             {
-                if (writer is not null)
+                if(writer is not null)
                     writer.Close();
             }
         }
@@ -163,7 +146,7 @@ namespace TicTacToe
          * 
          * 
          */
-        static char GameLoop(char currentPlayer, char[,] gameBoard, ref ushort xWins, ref ushort oWins, ref ushort ties, ref ushort rounds, StringBuilder sb)
+        static char GameLoop(char currentPlayer, char[,] gameBoard, ref ushort xWins, ref ushort yWins, ref ushort ties, ref ushort rounds, StringBuilder sb)
         {
             bool winner = false;
             char input;
@@ -174,7 +157,7 @@ namespace TicTacToe
             {
                 do
                 {
-                    DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
+                    DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
                     PrintToScreen(sb);
 
                     input = GetInput(gameBoard);
@@ -189,16 +172,14 @@ namespace TicTacToe
                             if (currentPlayer == 'X')
                                 xWins++;
                             else
-                                oWins++;
-                            DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
-                            rounds++;
+                                yWins++;
+                            DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
                             return currentPlayer;
                         }
                         else if (turns == maxTurns)
                         {
                             ties++;
-                            DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
-                            rounds++;
+                            DrawScreen(gameBoard, currentPlayer, xWins, yWins, ties, rounds, winner, sb);
                             return itsATie;
                         }
                     }
@@ -213,6 +194,7 @@ namespace TicTacToe
                 Console.WriteLine($"An error occurred: {e.Message}");
             }
 
+            rounds++;
             return currentPlayer;
         }
 
@@ -257,9 +239,9 @@ namespace TicTacToe
 
             try
             {
-                for (int r = 0; r < rowCount; r++)
+                for (int c = 0; c < colCount; c++)
                 {
-                    for (int c = 0; c < colCount; c++)
+                    for (int r = 0; r < rowCount; r++)
                     {
                         if (dGameBoard[r, c] == dInput)
                         {

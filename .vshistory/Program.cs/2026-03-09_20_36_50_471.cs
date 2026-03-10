@@ -100,7 +100,7 @@ namespace TicTacToe
 
                 sb.AppendLine($"Round #:\t{rounds}");
                 sb.AppendLine($"X wins:\t\t{xWins}");
-                sb.AppendLine($"O wins:\t\t{oWins}");
+                sb.AppendLine($"Y wins:\t\t{oWins}");
                 sb.AppendLine($"Ties:\t\t{ties}\n");
 
                 sb.AppendLine("-------------");
