@@ -7,8 +7,8 @@ namespace TicTacToe
     /*
      * Programming 2 - Assignment 3 – Winter 2026 
      * Created by:      Alison Cunningham, 1370596
-     * Tested by:       Stephanie
-     * Relationship:    sister
+     * Tested by:       TESTER NAME
+     * Relationship:    colleague/father/mother/etc
      * Date:            March 11, 2026
      *
      * Description: This program creates a two-player Tic-Tac-Toe game.

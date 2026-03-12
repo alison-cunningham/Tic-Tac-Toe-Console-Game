@@ -7,8 +7,8 @@ namespace TicTacToe
     /*
      * Programming 2 - Assignment 3 – Winter 2026 
      * Created by:      Alison Cunningham, 1370596
-     * Tested by:       Stephanie
-     * Relationship:    sister
+     * Tested by:       TESTER NAME
+     * Relationship:    colleague/father/mother/etc
      * Date:            March 11, 2026
      *
      * Description: This program creates a two-player Tic-Tac-Toe game.
@@ -39,10 +39,8 @@ namespace TicTacToe
             {
                 do
                 {
-                    currentPlayer = 'X';                //Player X always goes first
-                    PopulateArray(gameBoard);           //initializes the game board
-                    
-                    //runs a single round of TicTacToe
+                    currentPlayer = 'X';
+                    PopulateArray(gameBoard);
                     outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref oWins, ref ties, ref rounds, sb);
 
                     //display result message depending on outcome
@@ -162,7 +160,7 @@ namespace TicTacToe
             sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
             sb.AppendLine("-------------");
 
-            //display input prompt if the game has not ended
+            //displayed input prompt if the game has not ended
             if (!dWinner)
                 sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
 
@@ -247,7 +245,7 @@ namespace TicTacToe
          * DECLARE maxTurns as 9
          * 
          * DO WHILE winner is false
-         *      CALL DrawScreen to display the current board and game stats
+         *      CALL DrawScreen to display the current board and game stats\
          *      CALL PrintToScreen to output the screen contents
 	     *      CALL GetInput
 	     *      CALL UpdateArray
@@ -256,11 +254,11 @@ namespace TicTacToe
 		 *          CALL CheckWin
 		 *	        IF winner is TRUE
 		 *		        CurrentPlayer score + 1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END IF
-		 *	        ELSE IF turns = maxTurns
+		 *	        ELSE IF turns = maxRounds
 		 *		        ASSIGN tie +1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END ELSE IF
 		 *	    END IF
 		 *	    turns + 1
@@ -369,7 +367,7 @@ namespace TicTacToe
                     {
                         if (space == userPosition)      //checks if space is taken
                         {
-                            isValid = true;             //if available, isValid is true
+                            isValid = true;             //if available, isValid id true
                             break;
                         }
                     }

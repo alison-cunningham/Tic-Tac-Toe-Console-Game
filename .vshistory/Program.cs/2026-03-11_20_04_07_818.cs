@@ -7,8 +7,8 @@ namespace TicTacToe
     /*
      * Programming 2 - Assignment 3 – Winter 2026 
      * Created by:      Alison Cunningham, 1370596
-     * Tested by:       Stephanie
-     * Relationship:    sister
+     * Tested by:       TESTER NAME
+     * Relationship:    colleague/father/mother/etc
      * Date:            March 11, 2026
      *
      * Description: This program creates a two-player Tic-Tac-Toe game.
@@ -247,7 +247,7 @@ namespace TicTacToe
          * DECLARE maxTurns as 9
          * 
          * DO WHILE winner is false
-         *      CALL DrawScreen to display the current board and game stats
+         *      CALL DrawScreen to display the current board and game stats\
          *      CALL PrintToScreen to output the screen contents
 	     *      CALL GetInput
 	     *      CALL UpdateArray
@@ -256,11 +256,11 @@ namespace TicTacToe
 		 *          CALL CheckWin
 		 *	        IF winner is TRUE
 		 *		        CurrentPlayer score + 1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END IF
 		 *	        ELSE IF turns = maxTurns
 		 *		        ASSIGN tie +1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END ELSE IF
 		 *	    END IF
 		 *	    turns + 1

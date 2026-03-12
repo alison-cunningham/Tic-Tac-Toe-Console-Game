@@ -7,8 +7,8 @@ namespace TicTacToe
     /*
      * Programming 2 - Assignment 3 – Winter 2026 
      * Created by:      Alison Cunningham, 1370596
-     * Tested by:       Stephanie
-     * Relationship:    sister
+     * Tested by:       TESTER NAME
+     * Relationship:    colleague/father/mother/etc
      * Date:            March 11, 2026
      *
      * Description: This program creates a two-player Tic-Tac-Toe game.
@@ -39,22 +39,18 @@ namespace TicTacToe
             {
                 do
                 {
-                    currentPlayer = 'X';                //Player X always goes first
-                    PopulateArray(gameBoard);           //initializes the game board
-                    
-                    //runs a single round of TicTacToe
+                    currentPlayer = 'X';
+                    PopulateArray(gameBoard);
                     outcome = GameLoop(currentPlayer, gameBoard, ref xWins, ref oWins, ref ties, ref rounds, sb);
 
-                    //display result message depending on outcome
-                    if (outcome == 'T')                                     
+                    if (outcome == 'T')                                     // display result message depending on outcome
                         sb.AppendLine($"\nTie! Nobody wins.");
                     else                                                    // if not a tie, a player won
                         sb.AppendLine($"\nCongratulations! Player {outcome} wins!");
 
-                    final.Append(sb);           //store the completed round output
-                    PrintToScreen(sb);          //display final round screen
+                    final.Append(sb);
+                    PrintToScreen(sb);
 
-                    //ask the user if they want to play another round
                     Console.Write($"\nDo you want to play again? (y/n) ");
                     playerInput = Console.ReadLine();
 
@@ -67,20 +63,20 @@ namespace TicTacToe
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error occurred: {e.Message}");       //handles unexpected errors
+                Console.WriteLine($"An error occurred: {e.Message}");
             }
 
-            WriteToFile(final, filePath);           //write all game results to the output file
+            WriteToFile(final, filePath);
 
             Console.Clear();
             Console.WriteLine("Thanks for playing!");
             Console.ReadKey();
-            Process.Start("notepad.exe", filePath);         //open the results file in Notepad
+            Process.Start("notepad.exe", filePath);
         }
 
         /* 
          * the PopulateArray method initializes the TicTacToe game board.
-         * It receives the 2D array gameBoard and fills it with numbers 1 through 9 representing available board spaces.
+         * It recieves the 2D array gameBoard and fills it with numbers 1 through 9 representing available board spaces.
          * 
          * Algorithm:
          * The method creates a temporary array containing characters '1' to '9'.
@@ -88,30 +84,38 @@ namespace TicTacToe
          * 
          * PSEUDOCODE:
          * DECLARE colCount = number of columns in gameBoard
-         * DECLARE rowCount as number of rows in gameBoard
+         * DECLARE rowCount as number of rows in gameboard
          * DECLARE gameSpaces as char array
          * ASSIGN gameSpaces as numbers 1 to 9
          *
-         * FOR EACH row index FROM 0 to LESS THAN rowCount
-		 *  	FOR EACH column index FROM 0 to LESS THAN colCount
+         * FOR EACH column index FROM 0 to LESS THAN colCount
+		 *  	FOR EACH row index FROM 0 to LESS THAN rowCount
 		 *		    ASSIGN gameBoard index as gameSpaces index
 		 *	    END FOR
 		 * END FOR
+         * RETURN gameboard
          */
         static void PopulateArray(char[,] dGameBoard)
         {
-            int colCount = 3, rowCount = 3;         //number of rows and columns in gameBoard
+            int colCount = 3, rowCount = 3;
 
-            char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };    //temporary array representing board positions
-            int index = 0;          //tracks current position in the gameSpaces array
+            char[] gameSpaces = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            int index = 0;
 
-            for (int r = 0; r < rowCount; r++)
+            try
             {
-                for (int c = 0; c < colCount; c++)
+                for (int r = 0; r < rowCount; r++)
                 {
-                    dGameBoard[r, c] = gameSpaces[index];       //assign the next board position number to the current cell
-                    index++;        //move to the next value in the gameSpaces array
+                    for (int c = 0; c < colCount; c++)
+                    {
+                        dGameBoard[r, c] = gameSpaces[index];
+                        index++;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
             }
         }
 
@@ -138,38 +142,40 @@ namespace TicTacToe
          */
         static void DrawScreen(char[,] dGameBoard, char dCurrentPlayer, ushort xWins, ushort oWins, ushort ties, ushort rounds, bool dWinner, StringBuilder sb)
         {
+            try
+            {
+                sb.Clear();
 
-            sb.Clear();         //remove previous screen contents
+                sb.AppendLine("************************************");
+                sb.AppendLine("Welcome to Programming 2 - Assignment 3 – Winter 2026");
+                sb.AppendLine("Created by Alison Cunningham 1370596 on March 11, 2026");
+                sb.AppendLine($"************************************\n");
 
-            //append program title and information
-            sb.AppendLine("************************************");
-            sb.AppendLine("Welcome to Programming 2 - Assignment 3 – Winter 2026");
-            sb.AppendLine("Created by Alison Cunningham 1370596 on March 11, 2026");
-            sb.AppendLine($"************************************\n");
+                sb.AppendLine($"Round #:\t{rounds}");
+                sb.AppendLine($"X wins:\t\t{xWins}");
+                sb.AppendLine($"O wins:\t\t{oWins}");
+                sb.AppendLine($"Ties:\t\t{ties}\n");
 
-            //append current game statistics
-            sb.AppendLine($"Round #:\t{rounds}");
-            sb.AppendLine($"X wins:\t\t{xWins}");
-            sb.AppendLine($"O wins:\t\t{oWins}");
-            sb.AppendLine($"Ties:\t\t{ties}\n");
+                sb.AppendLine("-------------");
+                sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
+                sb.AppendLine("|---|---|---|");
+                sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
+                sb.AppendLine("|---|---|---|");
+                sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
+                sb.AppendLine("-------------");
 
-            //draw the TicTacToe board using values stored in the array
-            sb.AppendLine("-------------");
-            sb.AppendLine($"| {dGameBoard[0, 0]} | {dGameBoard[0, 1]} | {dGameBoard[0, 2]} |");
-            sb.AppendLine("|---|---|---|");
-            sb.AppendLine($"| {dGameBoard[1, 0]} | {dGameBoard[1, 1]} | {dGameBoard[1, 2]} |");
-            sb.AppendLine("|---|---|---|");
-            sb.AppendLine($"| {dGameBoard[2, 0]} | {dGameBoard[2, 1]} | {dGameBoard[2, 2]} |");
-            sb.AppendLine("-------------");
-
-            //display input prompt if the game has not ended
-            if (!dWinner)
-                sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
+                if (!dWinner)
+                    sb.Append($"Player {dCurrentPlayer}, enter a position (1-9): ");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
 
         }
 
         /*
-         * PrintToScreen is a method that receives the filled StringBuilder and prints it to screen.
+         * PrintToScreen is a method that recives the filled StringBuilder and prints it to screen.
          * First, the screen is cleared to remove old output, then the formatted game screen inside the StringBuilder is printed to the console.
          * 
          * Algorithm:
@@ -182,10 +188,16 @@ namespace TicTacToe
          */
         static void PrintToScreen(StringBuilder sb)
         {
+            try
+            {
+                Console.Clear();        //clear the screen before printing new output
 
-            Console.Clear();        //clear the screen before printing new output
-
-            Console.WriteLine(sb.ToString());       //convert to string and print out contents
+                Console.WriteLine(sb.ToString());       //convert to string and print out contents
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
         }
         /*
          * The WriteToFile method writes the contents of a StringBuilder object to a text file.
@@ -213,21 +225,21 @@ namespace TicTacToe
          */
         static void WriteToFile(StringBuilder sb, string filePath)
         {
-            StreamWriter writer = null;         //StreamWriter used to write to file
+            StreamWriter writer = null;
 
             try
             {
-                writer = new StreamWriter(filePath);        //open the file for writing using the given path
-                writer.Write(sb.ToString());                //convert StringBuilder to string and write contents to the file
+                writer = new StreamWriter(filePath);
+                writer.Write(sb.ToString());
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error writing file: {ex.Message}");         //display error message if file writing fails
+                Console.WriteLine($"Error writing file: {ex.Message}");
             }
             finally
             {
-                if (writer is not null)         //ensure the writer was successfully created
-                    writer.Close();             //close the file
+                if (writer is not null)
+                    writer.Close();
             }
         }
 
@@ -247,7 +259,7 @@ namespace TicTacToe
          * DECLARE maxTurns as 9
          * 
          * DO WHILE winner is false
-         *      CALL DrawScreen to display the current board and game stats
+         *      CALL DrawScreen to display the current board and game stats\
          *      CALL PrintToScreen to output the screen contents
 	     *      CALL GetInput
 	     *      CALL UpdateArray
@@ -256,11 +268,11 @@ namespace TicTacToe
 		 *          CALL CheckWin
 		 *	        IF winner is TRUE
 		 *		        CurrentPlayer score + 1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END IF
-		 *	        ELSE IF turns = maxTurns
+		 *	        ELSE IF maxRounds
 		 *		        ASSIGN tie +1
-		 *		        BREAK and return currentPlayer
+		 *		        BREAK and return to main
 		 *	        END ELSE IF
 		 *	    END IF
 		 *	    turns + 1
@@ -271,52 +283,53 @@ namespace TicTacToe
          */
         static char GameLoop(char currentPlayer, char[,] gameBoard, ref ushort xWins, ref ushort oWins, ref ushort ties, ref ushort rounds, StringBuilder sb)
         {
-            bool winner = false;            //tracks if a player has won
-            char input;                     //stores the player's chosen board position
-            char itsATie = 'T';             //character that is returned to Main() if the round ends in a tie
-            byte turns = 1, maxTurns = 9;   //tracks the current turn and the max number of possible turns before the board is full
+            bool winner = false;
+            char input;
+            char itsATie = 'T';
+            byte turns = 1, maxTurns = 9;
 
-            do
+            try
             {
-                //build the screen and output it to console
-                DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
-                PrintToScreen(sb);
-
-                //get a valid position from the current player and place the symbol on the board
-                input = GetInput(gameBoard);  
-                UpdateArray(input, gameBoard, currentPlayer);  
-
-                if (turns > 4)          //a win is only possible after 5th turn
+                do
                 {
-                    winner = CheckWin(gameBoard, currentPlayer);        //check if current player has won
+                    DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
+                    PrintToScreen(sb);
 
-                    if (winner)
+                    input = GetInput(gameBoard);
+                    UpdateArray(input, gameBoard, currentPlayer);
+
+                    if (turns > 4)
                     {
-                        if (currentPlayer == 'X')
-                            xWins++;                //update score for player X if they've won
-                        else
-                            oWins++;                //update score for player O if they've won
+                        winner = CheckWin(gameBoard, currentPlayer);
 
-                        //draw final game board, increment round counter, and return the winning player
-                        DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
-                        rounds++;
-                        return currentPlayer;
+                        if (winner)
+                        {
+                            if (currentPlayer == 'X')
+                                xWins++;
+                            else
+                                oWins++;
+                            DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
+                            rounds++;
+                            return currentPlayer;
+                        }
+                        else if (turns == maxTurns)
+                        {
+                            ties++;
+                            DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
+                            rounds++;
+                            return itsATie;
+                        }
                     }
-                    else if (turns == maxTurns)         //if all positions are filled and there is no winner
-                    {
-                        //update tie counter, build final game board, increment round counter, and return 'T' for tie
-                        ties++;                      
-                        DrawScreen(gameBoard, currentPlayer, xWins, oWins, ties, rounds, winner, sb);
-                        rounds++;
-                        return itsATie;
-                    }
-                }
 
-                //move to next turn and switch current player
-                turns++;           
-                SwitchPlayer(ref currentPlayer);
+                    turns++;
+                    currentPlayer = SwitchPlayer(currentPlayer);
 
-            } while (!winner);
+                } while (!winner);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
 
             return currentPlayer;
         }
@@ -328,7 +341,7 @@ namespace TicTacToe
          * The method repeatedly asks the user for input until a valid and available position is entered.
          * First, the input is checked to ensure it can be converted to a character between '1' and '9'.
          * Then the board is searched to determine if the space is available.
-         * If the input is invalid or the position is already occupied, an error message is displayed and the user is prompted again.
+         * If the input is invalid of the position is already occupied, an error message is displayed and the user is prompted again.
          * 
          * Pseudocode:
          * DECLARE char userPosition
@@ -357,35 +370,41 @@ namespace TicTacToe
          */
         static char GetInput(char[,] gameBoard)
         {
-            char userPosition = '0';            //stores the position entered by the user
-            char smallestSpace = '1', largestSpace = '9';       //valid range of board positions
-            bool isValid = false;               //tracks whether input is valid and space is available
+            char userPosition = '0', smallestSpace = '1', largestSpace = '9';
+            bool isValid = false;
 
-            do
-            {           //check if input is valid and within given range
-                if (char.TryParse(Console.ReadLine(), out userPosition) && userPosition >= smallestSpace && userPosition <= largestSpace)
+            try
+            {
+                do
                 {
-                    foreach (char space in gameBoard)
+                    if (char.TryParse(Console.ReadLine(), out userPosition) && userPosition >= smallestSpace && userPosition <= largestSpace)
                     {
-                        if (space == userPosition)      //checks if space is taken
+                        foreach (char space in gameBoard)
                         {
-                            isValid = true;             //if available, isValid is true
-                            break;
+                            if (space == userPosition)
+                            {
+                                isValid = true;
+                                break;
+                            }
                         }
+                        if (!isValid)
+                            Console.WriteLine($"That spot is already taken. Please choose another.\n");
                     }
-                    if (!isValid)           //keep prompting as long as input is invalid or unavailable
-                        Console.WriteLine($"That spot is already taken. Please choose another.\n");
-                }
-                else
-                    Console.WriteLine($"Error: please enter a number from 1 - 9.\n");
+                    else
+                        Console.WriteLine($"Error: please enter a number from 1 - 9.\n");
 
-            } while (!isValid);
+                } while (!isValid);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
 
-            return userPosition;        //return the validated board position
+            return userPosition;
         }
 
         /* 
-         * The UpdateArray method places the player's symbol on the board.
+         * TheUpdateArray method places the player's symbol on the board.
          * It searches the game board for the position matching the user input.
          * It then replaces that position with the current player's symbol.
          * 
@@ -404,26 +423,32 @@ namespace TicTacToe
          */
         static void UpdateArray(char dInput, char[,] dGameBoard, char dCurrentPlayer)
         {
-            int colCount = 3, rowCount = 3;             //number of columns and rows in the game board
+            int colCount = 3, rowCount = 3;
 
-            for (int r = 0; r < rowCount; r++)
+            try
             {
-                for (int c = 0; c < colCount; c++)
+                for (int r = 0; r < rowCount; r++)
                 {
-                    if (dGameBoard[r, c] == dInput)             //check if the cell matches the player's input
+                    for (int c = 0; c < colCount; c++)
                     {
-                        dGameBoard[r, c] = dCurrentPlayer;      //replace the number with the player symbol
-                        break;
+                        if (dGameBoard[r, c] == dInput)
+                        {
+                            dGameBoard[r, c] = dCurrentPlayer;
+                            break;
+                        }
+
                     }
 
                 }
-
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
         }
 
         /* 
-         * SwitchPlayer is the method responsible for changing the currentPlayer symbol.
+         * SwitchPlayer is the method resposible for changing the currentPlayer symbol.
          * If the current player is 'X', it switches to 'O'.
          * If the current player is 'O', it switches to 'X'.
          * 
@@ -435,15 +460,23 @@ namespace TicTacToe
 		 *      ASSIGN currentPlayer 'O'
 	     * ELSE currentPlayer is 'O'
 		 *       ASSIGN currentPlayer 'X'
+         * RETURN currentPlayer
          */
-        public static void SwitchPlayer(ref char dCurrentPlayer)
+        public static char SwitchPlayer(char dCurrentPlayer)
         {
+            try
+            {
+                if (dCurrentPlayer == 'X')
+                    dCurrentPlayer = 'O';
+                else
+                    dCurrentPlayer = 'X';
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
 
-            if (dCurrentPlayer == 'X')      //If current player is X, switch to O
-                dCurrentPlayer = 'O';
-            else                            //otherwise the player must be O, so switch to X
-                dCurrentPlayer = 'X';
-
+            return dCurrentPlayer;
         }
 
         /* 
@@ -513,63 +546,70 @@ namespace TicTacToe
             int colCount = 3, rowCount = 3;         //number of columns and rows in the game board
             bool winner = false;                    //tracks whether the current player has won
 
-            //Check for row win
-            for (int r = 0; r < rowCount; r++)
+            try
             {
-                winner = true;              //assume the row is a winning row
-
-                for (int c = 0; c < colCount; c++)
-                {
-                    if (dGameBoard[r, c] != dCurrentPlayer)
-                    {
-                        winner = false;     //if a cell does not match the current player symbol, it is not a winning row
-                        break;              //don't check the rest of the row
-                    }
-                }
-                if (winner)         //if all cells match the current player, there is a winner
-                    return winner;  //don't bother checking other win combinations, just return with true
-            }
-
-            //Check for column win
-            for (int c = 0; c < colCount; c++)
-            {
-                winner = true;              //assume the column is a win
-
+                //Check for row win
                 for (int r = 0; r < rowCount; r++)
                 {
-                    if (dGameBoard[r, c] != dCurrentPlayer)
+                    winner = true;              //assume the row is a winning row
+
+                    for (int c = 0; c < colCount; c++)
                     {
-                        winner = false;         //if a cell does not match the current player, it is not a winning column
-                        break;                  //do not check the rest of the column
+                        if (dGameBoard[r, c] != dCurrentPlayer)
+                        {
+                            winner = false;     //if a cell does not match the current player symbol, it is not a winning row
+                            break;              //don't check the rest of the row
+                        }
+                    }
+                    if (winner)         //if all cells match the current player, there is a winner
+                        return winner;  //don't bother checking other win combinations, just return with true
+                }
+
+                //Check for column win
+                for (int c = 0; c < colCount; c++)
+                {
+                    winner = true;              //assume the column is a win
+
+                    for (int r = 0; r < rowCount; r++)
+                    {
+                        if (dGameBoard[r, c] != dCurrentPlayer)
+                        {
+                            winner = false;         //if a cell does not match the current player, it is not a winning column
+                            break;                  //do not check the rest of the column
+                        }
+                    }
+                    if (winner)             //if all cells match the current player, there is a win
+                        return winner;      //do not check other combinations, just return true
+                }
+
+                //Check for diagonal win
+                winner = true;          //assume a win
+
+                for (int i = 0; i < colCount; i++)          //loop through the top-left to bottom-right diagonal
+                {                           
+                    if (dGameBoard[i, i] != dCurrentPlayer)
+                    {
+                        winner = false;     //diagonal is not a win
+                        break;              //stop checking
                     }
                 }
-                if (winner)             //if all cells match the current player, there is a win
-                    return winner;      //do not check other combinations, just return true
-            }
+                if (winner)                 //if the loop finishes without being proven false, it's a win
+                    return winner;          //return true, do not continue
 
-            //Check for diagonal win
-            winner = true;          //assume a win
+                winner = true;          //assume a win
 
-            for (int i = 0; i < colCount; i++)          //loop through the top-left to bottom-right diagonal
-            {
-                if (dGameBoard[i, i] != dCurrentPlayer)
+                for (int i = 0; i < rowCount; i++)          //loop through the opposite diagonal
                 {
-                    winner = false;     //diagonal is not a win
-                    break;              //stop checking
+                    if (dGameBoard[i, colCount - 1 - i] != dCurrentPlayer)
+                    {
+                        winner = false;     //if a cell does not match, it is not a win
+                        break;              //stop checking
+                    }
                 }
             }
-            if (winner)                 //if the loop finishes without being proven false, it's a win
-                return winner;          //return true, do not continue
-
-            winner = true;          //assume a win
-
-            for (int i = 0; i < rowCount; i++)          //loop through the opposite diagonal
+            catch (Exception e)
             {
-                if (dGameBoard[i, colCount - 1 - i] != dCurrentPlayer)
-                {
-                    winner = false;     //if a cell does not match, it is not a win
-                    break;              //stop checking
-                }
+                Console.WriteLine($"An error occurred: {e.Message}");
             }
 
             return winner;          //return final result
